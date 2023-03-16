@@ -1,11 +1,48 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
+import { useNavigate } from "react-router-dom";
 import PostService from "../services/post.service";
-import GoogleAutocomplete from "./GoogleAutocomplete";
 
 const PostForm = () => {
+  const [autocomplete, setAutocomplete] = useState(null);
   const [credentials, setCredentials] = useState({});
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src =
+      "https://maps.googleapis.com/maps/api/js?key=AIzaSyC4z19Ujnn3veXS-coXR4XaTmEovmwdP8w&libraries=places";
+    script.onload = () => {
+      const address = document.getElementById("address");
+      const newAutocomplete = new window.google.maps.places.Autocomplete(address);
+      setAutocomplete(newAutocomplete);
+    };
+    document.body.appendChild(script);
+  }, []);
+
+  const handlePlaceChange = () => {
+    if (autocomplete) {
+      const place = autocomplete.getPlace();
+      const countryComponent = place.address_components.find(component =>
+        component.types.includes("country")
+      );
+      const postalCodeComponent = place.address_components.find(component =>
+        component.types.includes("postal_code")
+      );
+      setCredentials({
+        ...credentials,
+        formatted_address: place.formatted_address,
+        city: place.name,
+        country: countryComponent ? countryComponent.long_name : "",
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng(),
+        postal_code: postalCodeComponent ? postalCodeComponent.long_name : ""
+      });
+    }
+    console.log("place change", credentials);
+  };
 
   const createPost = async formData => {
     await PostService.create(formData);
@@ -13,8 +50,6 @@ const PostForm = () => {
 
   const onDrop = useCallback(
     acceptedFiles => {
-      console.log(acceptedFiles);
-      console.log("credentials :", credentials);
       setCredentials({ ...credentials, uploadFiles: acceptedFiles });
     },
     [credentials]
@@ -37,15 +72,20 @@ const PostForm = () => {
     const formData = new FormData();
     formData.append("title", credentials.title);
     formData.append("content", credentials.content);
-    console.log(credentials);
-
-    credentials.uploadFiles.forEach(file => {
-      formData.append("photos", file);
-    });
-    formData.append("autocomplete[formatted_address]", credentials.autocomplete.formatted_address);
-    console.log("credentials :", credentials);
-    console.log("formData : ", formData.get("photos"));
+    console.log("submit credentials", credentials);
+    if (credentials.uploadFiles) {
+      credentials.uploadFiles.forEach(file => {
+        formData.append("photos", file);
+      });
+    }
+    formData.append("formatted_address", credentials.formatted_address);
+    formData.append("city", credentials.city);
+    formData.append("country", credentials.country);
+    formData.append("lat", credentials.lat);
+    formData.append("lng", credentials.lng);
+    formData.append("postal_code", credentials.postal_code);
     createPost(formData);
+    navigate("/");
   };
 
   return (
@@ -68,7 +108,20 @@ const PostForm = () => {
         rows={4}
         onChange={handleChange}
       />
-      <GoogleAutocomplete />
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          ".MuiInputBase-root, .MuiButton-root": {
+            mb: 2
+          }
+        }}>
+        <TextField
+          type="text"
+          id="address"
+          name="location"
+          onChange={handlePlaceChange}></TextField>
+      </Box>
       <Box
         {...getRootProps()}
         sx={{

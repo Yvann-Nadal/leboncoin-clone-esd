@@ -3,6 +3,7 @@ import axios from 'axios'
 const endPoint = '/posts'
 
 const getAll = async () => {
+    console.log(`${process.env.REACT_APP_URL_API}${endPoint}`);
     const response = await axios.get(`${process.env.REACT_APP_URL_API}${endPoint}`)
     return response.data
 }

@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PostService from "../services/post.service";
@@ -35,22 +35,51 @@ const PostDetails = ({ posts }) => {
           p: 2,
           cursor: "pointer"
         }}>
+        <Box>
+          <Grid container spacing={3}>
+            {post.uploadFiles && post.uploadFiles.length > 0 && (
+              <>
+                <Grid item xs={post.uploadFiles.length < 3 ? 12 : 8}>
+                  <Box
+                    sx={{
+                      backgroundImage: `url(${post.uploadFiles[0]?.Location})`,
+                      backgroundSize: "cover",
+                      height: 400,
+                      width: "100%"
+                    }}></Box>
+                </Grid>
+                {post.uploadFiles.length > 2 && (
+                  <Grid item xs={4} columnSpacing={2}>
+                    <Box
+                      sx={{
+                        backgroundImage: `url(${post.uploadFiles[1]?.Location})`,
+                        height: 200,
+                        backgroundSize: "cover",
+                        width: "100%"
+                      }}></Box>
+                    <Box
+                      sx={{
+                        backgroundImage: `url(${post.uploadFiles[2]?.Location})`,
+                        backgroundSize: "cover",
+                        height: 200,
+                        width: "100%"
+                      }}></Box>
+                  </Grid>
+                )}
+              </>
+            )}
+          </Grid>
+        </Box>
         <Typography variant="h3">{post.title}</Typography>
         <Typography variant="body1">{post.content}</Typography>
-        {post.uploadFiles?.length > 0 ? (
-          post.uploadFiles.map(photo => (
-            <Box key={photo.Key}>
-              <img src={photo.Location} alt="" />
-            </Box>
-          ))
-        ) : (
-          <Box>
-            <Typography variant="body1">No photos</Typography>
-          </Box>
-        )}
-        {/* <Box key={photo.id}>
-          <img src={photo.Location} alt="test" style={{ height: 100 }} />
-        </Box> */}
+
+        <Typography variant="body1">Ville : {post.city}</Typography>
+        <Typography variant="body1">Pays : {post.country}</Typography>
+        <Typography variant="body1">Lat : {post.lat}</Typography>
+        <Typography variant="body1">Lng : {post.lng}</Typography>
+        <Typography variant="body1">
+          Code postal : {post.postal_code ? post.postal_code : "Non renseigné"}
+        </Typography>
       </Box>
     </Box>
   );

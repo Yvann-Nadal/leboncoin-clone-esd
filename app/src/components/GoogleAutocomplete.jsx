@@ -19,7 +19,7 @@ const GoogleAutocomplete = () => {
 
   const handlePlaceChange = () => {
     console.log("autocomplete", autocomplete);
-    if (autocomplete && autocomplete.getPlace()) {
+    if (autocomplete) {
       const place = autocomplete.getPlace();
       const location = {
         address: place.formatted_address,
@@ -28,6 +28,7 @@ const GoogleAutocomplete = () => {
         placeId: place.place_id
         // Ajoutez d'autres détails que vous souhaitez récupérer ici
       };
+      console.log("place", location);
       setCredentials({ ...credentials, autocomplete: location });
 
       console.log("credentials", credentials);
@@ -43,7 +44,11 @@ const GoogleAutocomplete = () => {
           mb: 2
         }
       }}>
-      <TextField type="text" id="address" onChange={handlePlaceChange}></TextField>
+      <TextField
+        type="text"
+        id="address"
+        name="autocomplete"
+        onChange={handlePlaceChange}></TextField>
     </Box>
   );
 };

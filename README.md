@@ -23,9 +23,10 @@
 # TODO V4
 
 **_Backend :_**
-Ajouter la localisation pour chaque post (adresse, ville, code, postale, lat, lng) avec le package use-places-autocomplete
+~~Ajouter la localisation pour chaque post (adresse, ville, code postale, lat, lng) avec le package use-places-autocomplete~~
 
-**_Frontend :_** Formater les adresses avec Google Places API
+**_Frontend :_**
+~~Formater les adresses avec Google Places API~~
 
 > Utilisation de Google Places API : [exemple](https://ride.readme.io/docs/google-place-autocomplete), [exemple2](https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete)
 
@@ -35,7 +36,6 @@ Ajouter la localisation pour chaque post (adresse, ville, code, postale, lat, ln
 > | `street_number`               | `string` |
 > | `route`                       | `string` |
 > | `city`                        | `string` |
-> | `administrative_area_level_1` | `string` |
 > | `administrative_area_level_1` | `string` |
 > | `administrative_area_level_2` | `string` |
 > | `country`                     | `string` |

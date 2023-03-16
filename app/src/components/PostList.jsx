@@ -9,7 +9,7 @@ const PostList = ({ posts }) => {
     <Box>
       {posts.map(post => (
         <Box
-          key={post.id}
+          key={post._id}
           onClick={() => navigate(`/post/${post._id}`)}
           sx={{
             border: "2px solid black",
@@ -25,7 +25,7 @@ const PostList = ({ posts }) => {
               <img src={photo.Location} alt="test" style={{ height: 100 }} />
             </Box>
           ))}
-          {/* <Typography variant="body1">{post.autocomplete}</Typography> */}
+          <Typography variant="body1">{post.formatted_address}</Typography>
         </Box>
       ))}
     </Box>

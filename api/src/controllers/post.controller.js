@@ -1,16 +1,21 @@
 const Post = require('../models/post.model');
 const UploadFileModel = require('../models/uploadFile.model');
-const AutocompleteModel = require('../models/autocomplete.model');
 const uploadOneFileInAws = require('../utils/aws-s3');
 
 const PostController = {
     async createPost(req, res) {
-        const { title, content } = req.body;
+        const { title, content, formatted_address, city, country, lat, lng, postal_code } = req.body;
 
         try {
             const post = new Post({
                 title,
                 content,
+                formatted_address,
+                city,
+                country,
+                lat,
+                lng,
+                postal_code
             })
             await post.save();
 
@@ -24,22 +29,6 @@ const PostController = {
                 post.uploadFiles.push(uploadFile);
             }))
 
-            console.log("req.body :", req.body);
-            const autocomplete = new AutocompleteModel({
-                formatted_address: req.body.formatted_address,
-                street_number: req.body.street_number,
-                route: req.body.route,
-                city: req.body.city,
-                administrative_area_level_1: req.body.administrative_area_level_1,
-                administrative_area_level_2: req.body.administrative_area_level_2,
-                country: req.body.country,
-                postal_code: req.body.postal_code,
-                lat: req.body.lat,
-                lng: req.body.lng
-            });
-            await autocomplete.save();
-            console.log("autocomplete :", autocomplete);
-            post.autocomplete = autocomplete;
             console.log("post :", post);
 
             await post.save();
@@ -52,13 +41,14 @@ const PostController = {
 
     },
     async getPosts(req, res) {
-        const posts = await Post.find().populate('uploadFiles', 'autocomplete');
+        const posts = await Post.find().populate('uploadFiles');
         res.status(200).send(posts);
     },
     async getPost(req, res) {
         const { id } = req.params;
         try {
-            const post = await Post.findById(id).populate('uploadFiles', 'autocomplete');
+            const post = await Post.findById(id).populate('uploadFiles');
+            console.log("post :", post)
             res.status(200).send(post);
         } catch (error) {
             res.status(404).send({ message: error.message });
