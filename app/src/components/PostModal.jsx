@@ -1,5 +1,5 @@
-import { Backdrop, Box, Button, Fade, Grid, Modal, Paper, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Backdrop, Box, Button, Fade, Modal } from "@mui/material";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import SwiperCore, { Navigation, Pagination } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -13,8 +13,8 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 1500,
-  height: 200,
+  width: "100vw",
+  height: "100vh",
   bgcolor: "background.paper",
   border: "2px solid #000",
   borderRadius: 2,
@@ -22,7 +22,7 @@ const style = {
   p: 4
 };
 
-const PostModal = ({ posts }) => {
+const PostModal = () => {
   const [open, setOpen] = useState(false);
   const [post, setPost] = useState({});
   const handleOpen = () => setOpen(true);
@@ -47,8 +47,10 @@ const PostModal = ({ posts }) => {
     }
   }, [post]);
 
+  const swiperRef = useRef(null);
+
   return (
-    <div>
+    <Box>
       <Button onClick={handleOpen} variant="contained">
         Open modal
       </Button>
@@ -66,52 +68,108 @@ const PostModal = ({ posts }) => {
         }}>
         <Fade in={open}>
           <Box sx={style}>
-            <Box
-              sx={{
-                border: "2px solid black"
-              }}
-              style={{ height: "100%" }}>
-              {post.uploadFiles?.length > 0 ? (
-                post.uploadFiles.map(photo => (
-                  <Box key={photo.Key}>
-                    <Grid item xs={12} md={6}>
-                      <img src={photo.Location} alt="" style={{ width: "100%" }} />
-                    </Grid>
-                  </Box>
-                ))
-              ) : (
-                <Box>
-                  <Typography variant="body1">No photos</Typography>
-                </Box>
-              )}
-            </Box>
-            <Box>
-              <Typography variant="h3">{post.title}</Typography>
-              <Typography variant="body1">{post.content}</Typography>
-              <Typography variant="body1">{post.formatted_address}</Typography>
-            </Box>
             <Swiper
               spaceBetween={30}
-              slidesPerView={3}
+              slidesPerView={1}
               navigation
               pagination={{ clickable: true }}
               onSlideChange={() => console.log("slide change")}
               onSwiper={swiper => console.log(swiper)}
-              className="mySwiper">
-              {/* <SwiperSlide>
-                <img src={post.uploadFiles[0]?.Location} alt="Slide 1" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img src={post.uploadFiles[1]?.Location} alt="Slide 2" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img src={post.uploadFiles[2]?.Location} alt="Slide 3" />
-              </SwiperSlide> */}
+              ref={swiperRef}>
+              <Button
+                onClick={handleClose}
+                variant="contained"
+                color="error"
+                sx={{
+                  position: "absolute",
+                  top: 20,
+                  right: 20,
+                  zIndex: 1000
+                }}>
+                Close Modal
+              </Button>
+              {post.uploadFiles && post.uploadFiles.length > 0 && (
+                <SwiperSlide>
+                  <Box className="slide-content">
+                    <img
+                      src={post.uploadFiles[0]?.Location}
+                      alt="Slide 1"
+                      style={{ height: "100vh", width: "100vw" }}
+                    />
+                  </Box>
+                </SwiperSlide>
+              )}
+              {post.uploadFiles && post.uploadFiles.length >= 2 && post.uploadFiles.length > 0 && (
+                <SwiperSlide>
+                  <Box className="slide-content">
+                    <img
+                      src={post.uploadFiles[1]?.Location}
+                      alt="Slide 2"
+                      style={{ height: "100vh", width: "100vw" }}
+                    />
+                  </Box>
+                </SwiperSlide>
+              )}
+              {post.uploadFiles && post.uploadFiles.length >= 3 && post.uploadFiles.length > 0 && (
+                <SwiperSlide>
+                  <Box className="slide-content">
+                    <img
+                      src={post.uploadFiles[2]?.Location}
+                      alt="Slide 3"
+                      style={{ height: "100vh", width: "100vw" }}
+                    />
+                  </Box>
+                </SwiperSlide>
+              )}
+              {post.uploadFiles && post.uploadFiles.length >= 4 && post.uploadFiles.length > 0 && (
+                <SwiperSlide>
+                  <Box className="slide-content">
+                    <img
+                      src={post.uploadFiles[3]?.Location}
+                      alt="Slide 4"
+                      style={{ height: "100vh", width: "100vw" }}
+                    />
+                  </Box>
+                </SwiperSlide>
+              )}
+              {post.uploadFiles && post.uploadFiles.length >= 5 && post.uploadFiles.length > 0 && (
+                <SwiperSlide>
+                  <Box className="slide-content">
+                    <img
+                      src={post.uploadFiles[4]?.Location}
+                      alt="Slide 5"
+                      style={{ height: "100vh", width: "100vw" }}
+                    />
+                  </Box>
+                </SwiperSlide>
+              )}
+              {post.uploadFiles && post.uploadFiles.length >= 6 && post.uploadFiles.length > 0 && (
+                <SwiperSlide>
+                  <Box className="slide-content">
+                    <img
+                      src={post.uploadFiles[5]?.Location}
+                      alt="Slide 6"
+                      style={{ height: "100vh", width: "100vw" }}
+                    />
+                  </Box>
+                </SwiperSlide>
+              )}
+              {post.uploadFiles && post.uploadFiles.length >= 7 && post.uploadFiles.length > 0 && (
+                <SwiperSlide>
+                  <Box className="slide-content">
+                    <img
+                      src={post.uploadFiles[6]?.Location}
+                      alt="Slide 7"
+                      style={{ height: "100vh", width: "100vw" }}
+                    />
+                  </Box>
+                </SwiperSlide>
+              )}
             </Swiper>
           </Box>
         </Fade>
       </Modal>
-    </div>
+    </Box>
   );
 };
 

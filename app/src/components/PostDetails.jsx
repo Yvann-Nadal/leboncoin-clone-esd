@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PostService from "../services/post.service";
 
-const PostDetails = ({ posts }) => {
+const PostDetails = () => {
   const [post, setPost] = useState({});
 
   const { id } = useParams();
@@ -36,7 +36,7 @@ const PostDetails = ({ posts }) => {
           cursor: "pointer"
         }}>
         <Box>
-          <Grid container spacing={3}>
+          <Grid container spacing={1}>
             {post.uploadFiles && post.uploadFiles.length > 0 && (
               <>
                 <Grid item xs={post.uploadFiles.length < 3 ? 12 : 8}>
@@ -49,7 +49,7 @@ const PostDetails = ({ posts }) => {
                     }}></Box>
                 </Grid>
                 {post.uploadFiles.length > 2 && (
-                  <Grid item xs={4} columnSpacing={2}>
+                  <Grid item xs={4}>
                     <Box
                       sx={{
                         backgroundImage: `url(${post.uploadFiles[1]?.Location})`,
